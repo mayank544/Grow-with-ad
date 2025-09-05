@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grow with Ad — Affordable ads, Real growth</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-dark: #312f2fd0;
+      --glass: rgb(255, 255, 255);
+      --accent1: #ff6b6b;
+      --accent2: #ffd66b;
+      --accent3: #6bd0ff;
+      --accent4: #c86bff;
+      --accent5: #6bffb3;
+    }
+
+    html,body { height:100%; }
+    body{
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: var(--bg-dark);
+      color: #e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+    }
+
+    /* Animated colorful blobs in background */
+    .bg-blobs{
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      overflow: hidden;
+      mix-blend-mode: screen;
+      filter: blur(28px) saturate(1.2);
+    }
+    .blob {
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      opacity: .55;
+      transform: translate3d(0,0,0);
+    }
+    .blob.b1 { background: linear-gradient(135deg,var(--accent1),var(--accent2)); left:-12%; top:-8%; animation:float1 10s ease-in-out infinite; }
+    .blob.b2 { background: linear-gradient(135deg,var(--accent3),var(--accent4)); right:-6%; top:6%; width:420px;height:420px; animation:float2 14s ease-in-out infinite; }
+    .blob.b3 { background: linear-gradient(135deg,var(--accent5),var(--accent1)); left:20%; bottom:-12%; width:460px;height:460px; animation:float3 12s ease-in-out infinite; }
+
+    @keyframes float1{
+      0%{ transform: translateY(0) scale(1) translateX(0); }
+      50%{ transform: translateY(40px) scale(1.08) translateX(20px); }
+      100%{ transform: translateY(0) scale(1) translateX(0); }
+    }
+    @keyframes float2{
+      0%{ transform: translateY(0) scale(1); }
+      50%{ transform: translateY(-40px) scale(1.05) translateX(-30px); }
+      100%{ transform: translateY(0) scale(1); }
+    }
+    @keyframes float3{
+      0%{ transform: translateY(0) scale(1); }
+      50%{ transform: translateY(30px) scale(1.06) translateX(10px); }
+      100%{ transform: translateY(0) scale(1); }
+    }
+
+    /* subtle glass panel */
+    .glass {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.336), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(6px) saturate(1.05);
+      border-radius: 14px;
+    }
+
+    /* Header / Navbar */
+    .navbar-brand { font-weight:800; letter-spacing:0.4px; color: #fff; }
+    .nav-link { color: rgba(230,238,248,0.85) !important; }
+    .nav-link.active { color: #fff !important; font-weight:600; text-decoration:underline; text-decoration-thickness:2px; }
+
+    /* Hero */
+    .hero{
+      min-height: 78vh;
+      display:flex;
+      align-items:center;
+      padding: 5rem 1rem;
+    }
+    .hero .title {
+      font-size: clamp(1.6rem, 4vw, 3rem);
+      line-height:1.02;
+      font-weight:800;
+      background: linear-gradient(90deg, #fff 0%, #ffd66b 30%, #fff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing:-0.6px;
+    }
+    .hero p.lead { color: rgba(230,238,248,0.9); font-size:1.05rem; }
+
+    /* CTA buttons */
+    .btn-primary {
+      background: linear-gradient(90deg,var(--accent1),var(--accent3));
+      border: none;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+    }
+    .btn-outline-light {
+      border-color: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+
+    /* Services */
+    .service-card {
+      transition: transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .35s;
+      transform-origin:center;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .service-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+
+    /* Team */
+    .team .portrait{
+      width:120px; height:120px; border-radius:50%;
+      object-fit:cover; border:4px solid rgba(255,255,255,0.08);
+      transition: transform .25s ease;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+    }
+    .team .member:hover .portrait { transform: rotate(-6deg) scale(1.03); }
+
+    .member-card { transition: transform .35s, box-shadow .35s; }
+    .member-card:hover { transform: translateY(-8px); box-shadow: 0 18px 48px rgba(0,0,0,0.55); }
+
+    /* Contact */
+    .contact-card input, .contact-card textarea { background: rgba(255,255,255,0.02); color: #f5f8fb; border:1px solid rgba(255,255,255,0.06); }
+
+    /* reveal animation */
+    .reveal { opacity:0; transform: translateY(18px) scale(.995); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity:1; transform: translateY(0) scale(1); }
+
+    /* Footer */
+    footer { padding: 2.2rem 1rem; background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.28)); color:#cbd5e1; }
+
+    /* small screens spacing */
+    @media (max-width:575px){
+      .hero{ padding-top:6rem; padding-bottom:3.5rem; }
+      .portrait{ width:100px;height:100px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- background vibrant blobs -->
+  <div class="bg-blobs" id="bgBlobs">
+    <div class="blob b1" data-speed="0.02" aria-hidden></div>
+    <div class="blob b2" data-speed="0.015" aria-hidden></div>
+    <div class="blob b3" data-speed="0.018" aria-hidden></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-transparent py-3 position-sticky top-0" style="z-index:50;">
+    <div class="container">
+      <a class="navbar-brand" href="#">Grow with Ad</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          <li class="nav-item ms-2"><a class="btn btn-sm btn-outline-light" href="#contact">Get Quote</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <div class="reveal" style="--delay:0s;">
+            <h1 class="title mb-3">Grow with Ad — Affordable Ads. Real Growth.</h1>
+            <p class="lead mb-4">We help small businesses & creators scale reach with high-impact, low-cost ad campaigns and product reviews — tailored for budgets that actually make sense.</p>
+
+            <div class="d-flex flex-wrap gap-2">
+              <a href="#services" class="btn btn-primary btn-lg me-2"><i class="bi bi-graph-up"></i> Explore Services</a>
+              <a href="#contact" class="btn btn-outline-light btn-lg"><i class="bi bi-envelope-paper"></i> Contact Us</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5 mt-4 mt-lg-0">
+          <div class="glass p-4 shadow-lg reveal" style="--delay:.15s;">
+            <h5 class="mb-2 fw-semibold">Quick Snapshot</h5>
+            <ul class="mb-0 small text-muted">
+              <li>Account Growth — YouTube, Instagram and more</li>
+              <li>Product Reviews & Placements — discounted when product supplied</li>
+              <li>Low-cost packages for small businesses</li>
+            </ul>
+            <div class="mt-3 d-flex gap-2">
+              <span class="badge bg-light text-dark">Fast Turnaround</span>
+              <span class="badge bg-light text-dark">Transparent Pricing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about" class="py-5">
+    <div class="container">
+      <div class="row gy-4 align-items-center">
+        <div class="col-md-6 reveal">
+          <h3 class="fw-bold">About Grow with Ad</h3>
+          <p class="text-muted">Grow with Ad was founded to help local and small online businesses break through the noise. Ads shouldn't be expensive — they should be smart. We plan, create and place ads in targeted pockets so your product or channel gets real attention and measurable growth.</p>
+
+          <div class="mt-3">
+            <a class="btn btn-primary btn-sm me-2" href="#pricing">View Pricing</a>
+            <a class="btn btn-outline-light btn-sm" href="#contact">Start a Project</a>
+          </div>
+        </div>
+        <div class="col-md-6 reveal">
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <div class="p-3 glass">
+                <h6 class="mb-1">Mission</h6>
+                <p class="small text-muted mb-0">Make digital growth affordable & measurable for small businesses.</p>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="p-3 glass">
+                <h6 class="mb-1">Vision</h6>
+                <p class="small text-muted mb-0">A world where every good product finds its audience — regardless of budget.</p>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="p-3 glass d-flex gap-3 align-items-center">
+                <i class="bi bi-award-fill fs-3 text-warning"></i>
+                <div>
+                  <div class="fw-semibold">Affordable & Honest</div>
+                  <div class="small text-muted">Discounts when clients supply product for reviews. Transparent reports every week.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- row -->
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="py-5 bg-dark" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));">
+    <div class="container">
+      <div class="text-center mb-4 reveal">
+        <h3 class="fw-bold">Our Services</h3>
+        <p class="text-muted">Everything you need to grow — account growth, product reviews, and creative ads.</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4 reveal">
+          <div class="service-card p-4 glass h-100">
+            <div class="d-flex align-items-center mb-3">
+              <div class="display-6 text-white me-3"><i class="bi bi-people-fill"></i></div>
+              <div>
+                <h5 class="mb-0">Account Growth</h5>
+                <div class="small text-muted">YouTube, Instagram & more — followers, watch time & engagement focus.</div>
+              </div>
+            </div>
+            <ul class="small text-muted">
+              <li>Targeted ad placements</li>
+              <li>Channel optimization & thumbnails</li>
+              <li>Weekly performance reports</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="service-card p-4 glass h-100">
+            <div class="d-flex align-items-center mb-3">
+              <div class="display-6 text-white me-3"><i class="bi bi-box-seam"></i></div>
+              <div>
+                <h5 class="mb-0">Product Growth & Reviews</h5>
+                <div class="small text-muted">Honest review videos and multi-platform promotion.</div>
+              </div>
+            </div>
+            <ul class="small text-muted">
+              <li>Discounts if product provided</li>
+              <li>Review + promotional placements</li>
+              <li>Creative scripts & A/B tests</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-4 reveal">
+          <div class="service-card p-4 glass h-100">
+            <div class="d-flex align-items-center mb-3">
+              <div class="display-6 text-white me-3"><i class="bi bi-camera-reels"></i></div>
+              <div>
+                <h5 class="mb-0">Creative Ad Making</h5>
+                <div class="small text-muted">Short videos, reels and carousel creatives that convert.</div>
+              </div>
+            </div>
+            <ul class="small text-muted">
+              <li>Script → Shoot → Edit</li>
+              <li>Fast turnarounds</li>
+              <li>Performance-driven creatives</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section id="team" class="py-5">
+    <div class="container">
+      <div class="text-center mb-4 reveal">
+        <h3 class="fw-bold">Meet the Team</h3>
+        <p class="text-muted">Small core team — big on execution.</p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <!-- Krishna -->
+        <div class="col-6 col-sm-4 col-md-2 reveal">
+          <div class="member-card text-center p-3 glass h-100 member" data-name="Krishna" data-role="Founder & CEO" data-bio="Visionary leader building ad strategies focused on measurable growth for small businesses. Krishna sets strategy, client vision, and ensures delivery excellence.">
+            <img class="portrait mb-2" src="Krishna.jpg" width="110" height="110" alt="Krishna">
+            <div class="fw-semibold">Krishna</div>
+            <div class="small text-muted">Founder & CEO</div>
+            <button class="btn btn-sm btn-outline-light mt-2" data-bs-toggle="modal" data-bs-target="#teamModal" onclick="fillTeamModal(this)">View Bio</button>
+          </div>
+        </div>
+
+        <!-- Mayank -->
+        <div class="col-6 col-sm-4 col-md-2 reveal">
+          <div class="member-card text-center p-3 glass h-100 member" data-name="Mayank" data-role="Social Media & Company Manager" data-bio="Handles social channels, client relations and campaign coordination. Mayank ensures campaigns run smoothly and clients stay informed.">
+            <img class="portrait mb-2" src="mayank.jpg" width="110" height="110" alt="Mayank">
+            <div class="fw-semibold">Mayank</div>
+            <div class="small text-muted">Social Media & Company Manager</div>
+            <button class="btn btn-sm btn-outline-light mt-2" data-bs-toggle="modal" data-bs-target="#teamModal" onclick="fillTeamModal(this)">View Bio</button>
+          </div>
+        </div>
+
+        <!-- Hemant -->
+        <div class="col-6 col-sm-4 col-md-2 reveal">
+          <div class="member-card text-center p-3 glass h-100 member" data-name="Hemant" data-role="Assistant Manager" data-bio="Supports project delivery and client communication; coordinates timelines and helps with reporting.">
+            <img class="portrait mb-2" src="hemant.jpg" width="110" height="110" alt="Hemant">
+            <div class="fw-semibold">Hemant</div>
+            <div class="small text-muted">Assistant Manager</div>
+            <button class="btn btn-sm btn-outline-light mt-2" data-bs-toggle="modal" data-bs-target="#teamModal" onclick="fillTeamModal(this)">View Bio</button>
+          </div>
+        </div>
+
+  <!-- Pricing quick (compact) -->
+  <section id="pricing" class="py-5 bg-dark">
+    <div class="container">
+      <div class="text-center reveal mb-4">
+        <h4 class="fw-bold">Transparent Pricing (negotiable)</h4>
+        <p class="text-muted small">Starter packages for trials, Growth plans for scaling, Product Boost for reviews.</p>
+      </div>
+
+      <div class="row g-3 justify-content-center">
+        <div class="col-sm-6 col-md-3 reveal">
+          <div class="p-3 glass text-center">
+            <div class="fw-semibold">Starter</div>
+            <div class="display-6 fw-bold">₹4xx</div>
+            <div class="small text-muted">Basic placements — trial campaigns</div>
+            <button class="btn btn-sm btn-primary mt-3">Choose</button>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 reveal">
+          <div class="p-3 glass text-center border border-warning">
+            <div class="fw-semibold">Growth</div>
+            <div class="display-6 fw-bold">₹1xxx</div>
+            <div class="small text-muted">Full account growth package</div>
+            <button class="btn btn-sm btn-light mt-3">Choose</button>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3 reveal">
+          <div class="p-3 glass text-center">
+            <div class="fw-semibold">Product Boost</div>
+            <div class="display-6 fw-bold">₹6xx</div>
+            <div class="small text-muted">Product review + placements</div>
+            <button class="btn btn-sm btn-primary mt-3">Choose</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-5">
+    <div class="container">
+      <div class="text-center reveal mb-4">
+        <h3 class="fw-bold">Contact Us</h3>
+        <p class="text-muted">Drop a message — we reply quickly. Please use Instagram Or Watshapp to Massage </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-6 reveal">
+          <div class="p-4 glass contact-card">
+            <form id="contactForm" novalidate>
+              <div class="mb-3">
+                <label class="form-label small text-muted">Your Name</label>
+                <input required type="text" class="form-control" id="name" placeholder="e.g. Rahul">
+                <div class="invalid-feedback">Please enter your name.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small text-muted">Email</label>
+                <input required type="email" class="form-control" id="email" placeholder="you@example.com">
+                <div class="invalid-feedback">Please enter a valid email.</div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small text-muted">Message</label>
+                <textarea required id="message" rows="4" class="form-control" placeholder="Tell us about your requirement"></textarea>
+                <div class="invalid-feedback">Please add a message.</div>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button class="btn btn-primary" type="button" 
+        onclick="window.open('https://www.instagram.com/grow__with__ad/?__pwa=1', '_blank')">
+  <i class="bi bi-send-fill"></i> Send Message
+</button>
+                <button class="btn btn-outline-light" type="button" id="demoFill">Fill Demo</button>
+              </div>
+            </form>
+
+            <div id="formAlert" class="mt-3" style="display:none;"></div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 reveal">
+          <div class="p-4 glass h-100">
+            <h6 class="fw-semibold">Office</h6>
+            <p class="small text-muted mb-1"><i class="bi bi-geo-alt-fill me-2"></i>Sanjay Colony Bhatti Mines,New Delhi = 110074</p>
+            <p class="small text-muted mb-1"><i class="bi bi-envelope-fill me-2"></i>growwithad6@gmail.com</p>
+            <p class="small text-muted mb-0"><i class="bi bi-telephone-fill me-2"></i>+91 75033 15833 <br>
+           <p class="small text-muted mb-0"><i class="bi bi-telephone-fill me-2"></i> +91 98211 58437<br>
+            <p class="small text-muted mb-0"><i class="bi bi-telephone-fill me-2"></i>+91 96505 85392</p>
+
+            <div class="mt-3">
+              <div class="ratio ratio-16x9 rounded" style="overflow:hidden;">
+                <!-- Map placeholder — replace with google maps iframe when ready -->
+                <div class="d-flex align-items-center justify-content-center text-muted"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28070.240775321276!2d77.23618789999999!3d28.425891549999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cdfcc3f889f0d%3A0xedd66d00826df049!2sSanjay%20Colony%2C%20Bhatti%20Kalan%2C%20New%20Delhi%2C%20Delhi!5e0!3m2!1sen!2sin!4v1756919995994!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <small class="text-muted">Socials:</small>
+              <div class="mt-2 d-flex gap-2">
+                <a href="https://www.facebook.com/profile.php?id=61580094830712&ref=pl_edit_ig_profile_ac" class="btn btn-sm btn-outline-light"><i class="bi bi-facebook"></i></a>
+                <a href="https://x.com/GrowwithAd6" class="btn btn-sm btn-outline-light"><i class="bi bi-twitter"></i></a>
+                <a href="https://www.youtube.com/@GrowWithAd-6" class="btn btn-sm btn-outline-light"><i class="bi bi-youtube"></i></a>
+                <a href="https://www.linkedin.com/in/grow-with-ad-267453362/" class="btn btn-sm btn-outline-light"><i class="bi bi-linkedin"></i></a>
+                <a href="https://www.whatsapp.com/channel/0029VbAn0an8KMqcxzMQlp06" class="btn btn-sm btn-outline-light"><i class="bi bi-people-fill"></i></a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-md-start text-center mb-3 mb-md-0">
+          <strong>Grow with Ad</strong> &nbsp;•&nbsp; Affordable ads for small business
+        </div>
+        <div class="col-md-6 text-md-end text-center small">
+          <a href="#" class="text-decoration-underline text-muted me-2">Privacy Policy</a>
+          <a href="#" class="text-decoration-underline text-muted me-2">Terms & Conditions</a>
+          <a href="#" class="text-decoration-underline text-muted">Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Team modal -->
+  <div class="modal fade" id="teamModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content bg-dark text-light glass border-light">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="teamModalTitle">Member</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="teamModalRole" class="small text-muted mb-2"></p>
+          <p id="teamModalBio"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ---------------------------
+    // Background mouse parallax for blobs (lightweight)
+    // ---------------------------
+    (function(){
+      const container = document.getElementById('bgBlobs');
+      const blobs = container.querySelectorAll('.blob');
+
+      let mouseX = 0, mouseY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth) - 0.5;
+        mouseY = (e.clientY / window.innerHeight) - 0.5;
+      });
+
+      function animateBlobs(){
+        blobs.forEach(b => {
+          const speed = parseFloat(b.dataset.speed) || 0.02;
+          const tx = mouseX * (speed * 200);
+          const ty = mouseY * (speed * 200);
+          b.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+        });
+        requestAnimationFrame(animateBlobs);
+      }
+      animateBlobs();
+    })();
+
+    // ---------------------------
+    // Reveal on scroll using IntersectionObserver
+    // ---------------------------
+    (function(){
+      const reveals = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.12});
+      reveals.forEach(el => io.observe(el));
+    })();
+
+    // ---------------------------
+    // Team modal fill function
+    // ---------------------------
+    function fillTeamModal(button){
+      const card = button.closest('.member');
+      const name = card.dataset.name || '';
+      const role = card.dataset.role || '';
+      const bio = card.dataset.bio || '';
+      document.getElementById('teamModalTitle').textContent = name;
+      document.getElementById('teamModalRole').textContent = role;
+      document.getElementById('teamModalBio').textContent = bio;
+    }
+
+    // ---------------------------
+    // Contact form handling (client-side)
+    // ---------------------------
+    (function(){
+      const form = document.getElementById('contactForm');
+      const alertBox = document.getElementById('formAlert');
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        // basic validation
+        if(!form.checkValidity()){
+          form.classList.add('was-validated');
+          return;
+        }
+
+        // simulate sending (replace with Formspree/EmailJS fetch in production)
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const message = document.getElementById('message').value.trim();
+
+        // show success toast-like message
+        alertBox.style.display = 'block';
+        alertBox.className = 'alert alert-success mt-3';
+        alertBox.textContent = 'Thank you, ' + (name||'there') + '! We received your message and will reply soon.';
+
+        form.reset();
+        form.classList.remove('was-validated');
+
+        // auto-hide after 6 seconds
+        setTimeout(()=>{ alertBox.style.display = 'none'; }, 6000);
+      });
+
+      // demo fill button to show interactivity
+      document.getElementById('demoFill').addEventListener('click', function(){
+        document.getElementById('name').value = 'Mayank';
+        document.getElementById('email').value = 'mayank@example.com';
+        document.getElementById('message').value = 'Hi — I want to grow my business with ads. Please guide.';
+      });
+    })();
+
+    // ---------------------------
+    // Smooth active nav link on scroll
+    // ---------------------------
+    (function(){
+      const sections = document.querySelectorAll('section[id], header');
+      const navLinks = document.querySelectorAll('.navbar .nav-link');
+      function onScroll(){
+        const scrollPos = window.scrollY + 120;
+        sections.forEach(sec=>{
+          if(!sec.id) return;
+          const top = sec.offsetTop;
+          const bottom = top + sec.offsetHeight;
+          const link = document.querySelector('.navbar .nav-link[href="#' + sec.id + '"]');
+          if(link){
+            if(scrollPos >= top && scrollPos < bottom){
+              navLinks.forEach(n=>n.classList.remove('active'));
+              link.classList.add('active');
+            }
+          }
+        });
+      }
+      window.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    })();
+
+  </script>
+</body>
+</html>
